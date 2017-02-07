@@ -31,7 +31,7 @@ namespace RustBusterTestPlugin
         public override void DeInitialize()
         {
             // DeInitialize gets called on disconnect, be sure to cleanup the user's client.
-            UnityEngine.Object.Destroy(Load);
+            if (Load != null) UnityEngine.Object.Destroy(Load);
         }
 
         public override void Initialize()
