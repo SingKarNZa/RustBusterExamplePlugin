@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using RustBuster2016.API;
 using UnityEngine;
@@ -35,9 +36,19 @@ namespace RustBusterTestPlugin
 
         public override void Initialize()
         {
-            Load = new GameObject();
-            test = Load.AddComponent<TestGUI>();
-            UnityEngine.Object.DontDestroyOnLoad(Load);
+            if (this.IsConnectedToAServer)
+            {
+                string SteamID = ClientConnect.Steam_GetSteamID().ToString();
+                string PlayerName = Marshal.PtrToStringAnsi(ClientConnect.Steam_GetDisplayname());
+                string answer = this.SendMessageToServer(SteamID + "-CanGUI");
+                UnityEngine.Debug.Log("Server Answer: " + answer);
+                if (answer == "yes")
+                {
+                    Load = new GameObject();
+                    test = Load.AddComponent<TestGUI>();
+                    UnityEngine.Object.DontDestroyOnLoad(Load);
+                }
+            }
             UnityEngine.Debug.Log("Loaded!");
         }
     }
